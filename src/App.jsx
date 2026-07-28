@@ -9,6 +9,7 @@ import Topics from './pages/Topics.jsx';
 import Flashcards from './pages/Flashcards.jsx';
 import Practice from './pages/Practice.jsx';
 import Stats from './pages/Stats.jsx';
+import FormulaSheet from './pages/FormulaSheet.jsx';
 
 const pageVariants = {
   initial: { opacity: 0, y: 8 },
@@ -42,6 +43,7 @@ function AppShell() {
               <Route path="/temata" element={<Page><TopicsRoute /></Page>} />
               <Route path="/karticky" element={<Page><Flashcards /></Page>} />
               <Route path="/procvicovani" element={<Page><Practice /></Page>} />
+              <Route path="/vzorce" element={<Page><FormulaSheet /></Page>} />
               <Route path="/statistiky" element={<Page><Stats /></Page>} />
             </Routes>
           </AnimatePresence>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Calculator, ChevronRight, RotateCcw, CheckCircle2 } from 'lucide-react';
+import { X, Calculator, ChevronRight, RotateCcw, CheckCircle2, PenLine } from 'lucide-react';
 import { useApp } from '../../contexts/AppContext.jsx';
 import { MathText, Formula } from '../math/Formula.jsx';
 
@@ -10,6 +10,7 @@ export default function WorkedExample({ topic, onClose }) {
   const [exIdx, setExIdx] = useState(0);
   const [revealed, setRevealed] = useState(0);
   const [completedSet, setCompletedSet] = useState(new Set());
+  const [attempt, setAttempt] = useState('');
 
   if (examples.length === 0) {
     return (
@@ -38,11 +39,13 @@ export default function WorkedExample({ topic, onClose }) {
 
   function resetExample() {
     setRevealed(0);
+    setAttempt('');
   }
 
   function goToExample(i) {
     setExIdx(i);
     setRevealed(0);
+    setAttempt('');
   }
 
   return (
@@ -73,6 +76,19 @@ export default function WorkedExample({ topic, onClose }) {
             <p className="prose-script"><MathText text={example.problem} /></p>
           </div>
 
+          {revealed === 0 && (
+            <div className="rounded-xl border border-blue-500/20 bg-blue-500/5 p-4">
+              <p className="text-[11px] text-blue-400 font-semibold uppercase mb-2 flex items-center gap-1.5"><PenLine size={11} /> Zkus to nejdřív sám (nepovinné)</p>
+              <input
+                value={attempt}
+                onChange={e => setAttempt(e.target.value)}
+                placeholder="Napiš svůj odhad výsledku..."
+                className="ai-input w-full px-3 py-2 text-sm"
+              />
+              <p className="text-[11px] text-slate-500 light:text-slate-600 mt-2">Až budeš mít odpověď, porovnej si ji s postupem a výsledkem níže.</p>
+            </div>
+          )}
+
           <div className="space-y-2">
             <p className="text-[11px] text-slate-500 light:text-slate-600 font-semibold uppercase">Postup řešení</p>
             <AnimatePresence initial={false}>
@@ -91,12 +107,19 @@ export default function WorkedExample({ topic, onClose }) {
           </div>
 
           {allRevealed && (
-            <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} className="rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-4 flex items-center justify-between">
-              <div>
-                <p className="text-[11px] text-emerald-400 font-semibold uppercase mb-1">Výsledek</p>
-                <Formula tex={example.answer} />
+            <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} className="rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-[11px] text-emerald-400 font-semibold uppercase mb-1">Výsledek</p>
+                  <Formula tex={example.answer} />
+                </div>
+                <CheckCircle2 size={22} className="text-emerald-400 shrink-0" />
               </div>
-              <CheckCircle2 size={22} className="text-emerald-400" />
+              {attempt.trim() && (
+                <p className="text-xs text-slate-400 light:text-slate-500 mt-2 pt-2 border-t border-white/10 light:border-black/10">
+                  Tvůj pokus: <span className="text-slate-300 light:text-slate-600">{attempt}</span> — sedí ti to?
+                </p>
+              )}
             </motion.div>
           )}
         </div>

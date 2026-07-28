@@ -3,6 +3,7 @@ import toast from 'react-hot-toast';
 import {
   getStats, saveStats, getLevelInfo, ACHIEVEMENTS,
   getProgress, saveProgress, getTheme, saveTheme,
+  getWrongQuestions, saveWrongQuestions,
 } from '../utils/storage.js';
 import { ALL_TOPICS } from '../data/mathTopics.js';
 
@@ -11,6 +12,7 @@ const AppContext = createContext(null);
 export function AppProvider({ children }) {
   const [stats, setStats] = useState(getStats);
   const [progress, setProgressState] = useState(getProgress);
+  const [wrongQuestions, setWrongQuestionsState] = useState(getWrongQuestions);
   const [theme, setTheme] = useState(getTheme);
 
   useEffect(() => {
@@ -137,6 +139,28 @@ export function AppProvider({ children }) {
     addXP(correct * 4 + 10);
   }, [addXP, incrementStat, unlockAchievement, setProgress, stats.totalQuizzes]);
 
+  const setWrongQuestions = useCallback((data) => {
+    setWrongQuestionsState(prev => {
+      const val = typeof data === 'function' ? data(prev) : data;
+      saveWrongQuestions(val);
+      return val;
+    });
+  }, []);
+
+  const recordQuestionAnswer = useCallback((topicId, qIndex, isCorrect) => {
+    setWrongQuestions(prev => {
+      const exists = prev.some(w => w.topicId === topicId && w.qIndex === qIndex);
+      if (isCorrect) {
+        if (!exists) return prev;
+        const next = prev.filter(w => !(w.topicId === topicId && w.qIndex === qIndex));
+        if (next.length === 0) unlockAchievement('mistakes_cleared');
+        return next;
+      }
+      if (exists) return prev;
+      return [...prev, { topicId, qIndex }];
+    });
+  }, [setWrongQuestions, unlockAchievement]);
+
   const recordWorkedExample = useCallback((topicId) => {
     setProgress(prev => {
       const entry = prev[topicId] || { learnedSections: [], quizBest: null, examplesDone: 0 };
@@ -151,6 +175,7 @@ export function AppProvider({ children }) {
   const value = {
     stats, addXP, unlockAchievement, incrementStat,
     progress, setProgress, toggleSectionLearned, recordQuizResult, recordWorkedExample,
+    wrongQuestions, recordQuestionAnswer,
     levelInfo: getLevelInfo(stats.xp),
     theme, toggleTheme,
   };

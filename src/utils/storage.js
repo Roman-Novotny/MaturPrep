@@ -45,6 +45,11 @@ export function saveTheme(theme) { set('theme', theme); }
 export function getProgress() { return get('progress', {}); }
 export function saveProgress(data) { set('progress', data); }
 
+// ── Špatně zodpovězené kvízové otázky (pro režim "Opakuj chyby") ─
+// [{ topicId, qIndex }] – qIndex je index otázky v poli topic.quiz
+export function getWrongQuestions() { return get('wrongQuestions', []); }
+export function saveWrongQuestions(list) { set('wrongQuestions', list); }
+
 // ── Systém úrovní ───────────────────────────────────────────
 const LEVELS = [
   { level: 1,  title: 'Nováček',       xpRequired: 0 },
@@ -88,4 +93,6 @@ export const ACHIEVEMENTS = [
   { id: 'streak_30',         icon: '💎', title: 'Měsíční devotee', desc: 'Streak 30 dní' },
   { id: 'xp_500',            icon: '🌟', title: '500 XP', desc: 'Dosáhl/a 500 XP' },
   { id: 'xp_2000',           icon: '🚀', title: '2000 XP', desc: 'Dosáhl/a 2000 XP' },
+  { id: 'mistakes_cleared',  icon: '🧹', title: 'Úklid chyb', desc: 'Opravil/a jsi všechny své chyby v kvízech' },
+  { id: 'mock_exam_done',    icon: '⏱️', title: 'Zkušební test', desc: 'Dokončil/a jsi zkušební test načas' },
 ];

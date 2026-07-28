@@ -3,7 +3,7 @@ import { NavLink, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   LayoutDashboard, ScrollText, Layers, Calculator, BarChart2,
-  Flame, Star, ChevronLeft, ChevronRight, GraduationCap, Zap,
+  Flame, Star, ChevronLeft, ChevronRight, GraduationCap, Zap, Sigma,
 } from 'lucide-react';
 import { useApp } from '../../contexts/AppContext.jsx';
 
@@ -12,6 +12,7 @@ const NAV_ITEMS = [
   { to: '/temata',     icon: ScrollText,      label: 'Témata',        color: '#f59e0b' },
   { to: '/karticky',   icon: Layers,          label: 'Kartičky',      color: '#ec4899' },
   { to: '/procvicovani', icon: Calculator,    label: 'Procvičování',  color: '#10b981' },
+  { to: '/vzorce',     icon: Sigma,           label: 'Vzorce',        color: '#06b6d4' },
   { to: '/statistiky', icon: BarChart2,       label: 'Statistiky',    color: '#a855f7' },
 ];
 
